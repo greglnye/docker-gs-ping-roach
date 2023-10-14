@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: docker-gs-ping-roach
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      ping: web
+  template:
+    metadata:
+      labels:
+        ping: web
+    spec:
+      containers:
+      - name: ping-site
+        image: greglnye/docker-gs-ping-roach
+        imagePullPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ping-entrypoint
+  namespace: default
+spec:
+  type: NodePort
+  selector:
+    ping: web
+  ports:
+  - port: 8080
+    targetPort: 8080
